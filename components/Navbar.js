@@ -26,6 +26,7 @@ export default function Navbar() {
       paddingLeft: 10,
       paddingRight:10,
       borderBottomWidth: 1,
+      borderBottomColor: '#e5e5e5'
     },
     logo: {
         width:50,
