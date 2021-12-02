@@ -1,3 +1,7 @@
 export { default as Home } from "./Home"
 export { default as Explorer } from "./Explorer"
 export { default as Account } from "./Account"
+export { default as Login } from "./Account/login"
+export { default as Register } from "./Account/register"
+export { default as Register2 } from "./Account/register2"
+export { default as AccountInformations } from "./Account/accountInformations"

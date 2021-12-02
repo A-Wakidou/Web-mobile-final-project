@@ -7,10 +7,10 @@ const Home = ({navigation}) => {
   const [data, setData] = useState([]);
   const getMangas = async () => {
     try {
-      const response = await fetch('https://kitsu.io/api/edge/anime?filter[text]=cowboy%20bebop');
+      const response = await fetch('https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=4');
       const json = await response.json()
-      console.log(json.data)
-      setData(json.data);
+      console.log(json.results)
+      setData(json.results);
     } catch (error) {
       console.error(error);
     } finally {
@@ -23,20 +23,22 @@ const Home = ({navigation}) => {
   }, [])
 
   return (
-    <View style={{ flex:1, padding:24}}>
+    <View style={{ padding:24}}>
+      <Text style={{fontWeight:'bold', fontSize:25,marginBottom:15}}>Les plus populaires</Text>
       {isLoading ? <ActivityIndicator/> : (
         <FlatList
+          numColumns="2"
           data={data}
-          keyExtractor={({ id }, index) => id}
+          keyExtractor={(item) => item.title}
           renderItem={({ item }) => (
-            <div style={{flex:1}}>
-              <Text style={{marginBottom:40}}>{item.attributes.canonicalTitle}</Text>
-              <Image style={{flex:1, width:100, height:100}} source={item.attributes.posterImage.tiny} />
-            </div>
-
+            <View>
+              {/*<Text style={{marginBottom:40}}>{item.title}</Text>*/}
+              <Image style={{ width:200, height:270, marginBottom:1,marginRight:1}} source={{uri:item.image_url}} />
+            </View>
           )}
         />
       )}
+      <Text style={{fontWeight:'bold', fontSize:25,marginBottom:10, marginTop:20}}>Prochaines sorties</Text>
     </View>
   )
 }
