@@ -3,7 +3,7 @@ import { View,Text, Button } from "react-native"
 import { getAuth, signOut } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const AccountInformations = ({navigation}) => {
+const AccountInformations = ({navigation}, props) => {
 
   const logOut = () => {
       const auth = getAuth();
@@ -25,7 +25,7 @@ const AccountInformations = ({navigation}) => {
   return (
     <View>
       <Text>Account informations</Text>
-      <Text></Text>
+      <Text>{props.data.email}</Text>
       <Button onPress={logOut} title="Sign out"/>
     </View>
   )

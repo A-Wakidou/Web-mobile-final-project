@@ -23,7 +23,7 @@ const Home = ({navigation}) => {
   }, [])
 
   return (
-    <View style={{ padding:24}}>
+    <View style={{ flex:1, justifyContent:'center', padding:24}}>
       <Text style={{fontWeight:'bold', fontSize:25,marginBottom:15}}>Les plus populaires</Text>
       {isLoading ? <ActivityIndicator/> : (
         <FlatList

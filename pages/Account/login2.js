@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View,  Button, TextInput} from 'react-native'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+
 export class login2 extends Component {
     constructor(props) {
         super(props)
@@ -8,14 +9,14 @@ export class login2 extends Component {
             email: '',
             password: '',
         }
-        this.onSignUp = this.onSignUp.bind(this)
+        this.onSignIn = this.onSignIn.bind(this)
     }
     onSignIn() {
         const { email, password} = this.state
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
             .then( (result) => {
-                console.log(result)
+                console.log('LoggedIn')
             })
             .catch( (error) => {
                 console.log(error)

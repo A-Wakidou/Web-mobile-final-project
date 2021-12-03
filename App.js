@@ -2,12 +2,18 @@ import React, {Component} from 'react';
 import {StatusBar} from 'expo-status-bar'
 import { StyleSheet, View,Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home,Account,Explorer, Login, Register2, AccountInformations } from "./pages"
+import { Home,Account,Explorer, Login2, Register2 } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {initializeApp} from 'firebase/app'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
+import {Provider} from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import rootReducer from './redux/reducers'
+import thunk from 'redux-thunk'
+import MainScreen from'./pages'
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const firebaseConfig = {
   apiKey: "AIzaSyDRSx-LtMPYklEzpTgNb2sJZsE_zmAico4",
@@ -26,9 +32,9 @@ const AccountStack = createNativeStackNavigator()
 function AccountStackScreens() {
   return (
     <AccountStack.Navigator>
-      <AccountStack.Screen name="Register" component={Register2} />
-      {/*<AccountStack.Screen name="Login" component={Login} />
-      <AccountStack.Screen name="AccountInformations" component={AccountInformations} /> */}
+      {/*<AccountStack.Screen name="Register" component={Register2} />*/}
+      <AccountStack.Screen name="Login" component={Login2} />
+      {/*<AccountStack.Screen name="AccountInformations" component={AccountInformations} /> */}
     </AccountStack.Navigator>
   )
 }
@@ -105,7 +111,9 @@ export class App extends Component {
       else {
         return (
           <View>
-            <AccountInformations />
+            <Provider store={store}>
+              <MainScreen />
+            </Provider>
           </View>
         )
       }
