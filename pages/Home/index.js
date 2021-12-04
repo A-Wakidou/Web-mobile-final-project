@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react"
-import { View,Text, StyleSheet,FlatList, ActivityIndicator, Image } from "react-native"
+import { View,Text, StyleSheet,FlatList, ActivityIndicator, Image, ScrollView } from "react-native"
+import Carousel from '../../components/carousel'
 
 const Home = ({navigation}) => {
 
@@ -24,21 +25,24 @@ const Home = ({navigation}) => {
 
   return (
     <View style={{ flex:1, justifyContent:'center', padding:24}}>
-      <Text style={{fontWeight:'bold', fontSize:25,marginBottom:15}}>Les plus populaires</Text>
-      {isLoading ? <ActivityIndicator/> : (
-        <FlatList
-          numColumns="2"
-          data={data}
-          keyExtractor={(item) => item.title}
-          renderItem={({ item }) => (
-            <View>
-              {/*<Text style={{marginBottom:40}}>{item.title}</Text>*/}
-              <Image style={{ width:200, height:270, marginBottom:1,marginRight:1}} source={{uri:item.image_url}} />
-            </View>
-          )}
-        />
-      )}
-      <Text style={{fontWeight:'bold', fontSize:25,marginBottom:10, marginTop:20}}>Prochaines sorties</Text>
+      <ScrollView>
+        <Carousel />
+        <Text style={{fontWeight:'bold', fontSize:25,marginBottom:15}}>Les plus populaires</Text>
+        {isLoading ? <ActivityIndicator/> : (
+          <FlatList
+            numColumns="2"
+            data={data}
+            keyExtractor={(item) => item.title}
+            renderItem={({ item }) => (
+              <View>
+                {/*<Text style={{marginBottom:40}}>{item.title}</Text>*/}
+                <Image style={{ width:200, height:270, marginBottom:1,marginRight:1}} source={{uri:item.image_url}} />
+              </View>
+            )}
+          />
+        )}
+        <Text style={{fontWeight:'bold', fontSize:25,marginBottom:10, marginTop:20}}>Prochaines sorties</Text>
+      </ScrollView>
     </View>
   )
 }

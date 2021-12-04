@@ -32,9 +32,8 @@ const AccountStack = createNativeStackNavigator()
 function AccountStackScreens() {
   return (
     <AccountStack.Navigator>
-      {/*<AccountStack.Screen name="Register" component={Register2} />*/}
-      <AccountStack.Screen name="Login" component={Login2} />
-      {/*<AccountStack.Screen name="AccountInformations" component={AccountInformations} /> */}
+      <AccountStack.Screen name="Account Informations" component={MainScreen} />
+      <AccountStack.Screen name="Register" component={Register2} />
     </AccountStack.Navigator>
   )
 }
@@ -74,49 +73,40 @@ export class App extends Component {
         </View>
       )
     }
-
-    if(!loggedIn){
       return (
-        <NavigationContainer>
-          <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarActiveTintColor: 'tomato',
-            tabBarInactiveTintColor: 'gray',
-          })}>
-            <Tab.Screen
-              name="Home"
-              component={Home}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="home" color={color} size={size} />
-            )}} />
-            <Tab.Screen
-              name="Explorer"
-              component={Explorer}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="magnify" color={color} size={size} />
-            )}} />
-            <Tab.Screen 
-              name="Account"
-              component={AccountStackScreens}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="account" color={color} size={size} />
-            )}} />
-          </Tab.Navigator>
-          <StatusBar style="auto"/>
-        </NavigationContainer>
-      )}
-      else {
-        return (
-          <View>
-            <Provider store={store}>
-              <MainScreen />
-            </Provider>
-          </View>
-        )
-      }
+        <Provider store={store}>
+          <NavigationContainer>
+            <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarActiveTintColor: 'tomato',
+              tabBarInactiveTintColor: 'gray',
+            })}>
+              <Tab.Screen
+                name="Home"
+                component={Home}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <MaterialCommunityIcons name="home" color={color} size={size} />
+              )}} />
+              <Tab.Screen
+                name="Explorer"
+                component={Explorer}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <MaterialCommunityIcons name="magnify" color={color} size={size} />
+              )}} />
+              <Tab.Screen 
+                name="Account"
+                component={ loggedIn ? AccountStackScreens : Account}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <MaterialCommunityIcons name="account" color={color} size={size} />
+              )}} />
+            </Tab.Navigator>
+            <StatusBar style="auto"/>
+          </NavigationContainer>
+        </Provider>
+      )
   }
 }
 
