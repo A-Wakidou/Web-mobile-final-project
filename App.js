@@ -93,7 +93,7 @@ export class App extends Component {
               headerShown:false
             })}>
               <Tab.Screen
-                name="Home"
+                name="Homes"
                 component={HomeStackScreens}
                 options={{
                   tabBarIcon: ({ color, size }) => (

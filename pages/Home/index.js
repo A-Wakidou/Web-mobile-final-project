@@ -22,9 +22,6 @@ const Home = ({navigation}) => {
     getMangas()
   }, [])
 
-  function onPress() {
-  }
-
   return (
     <View style={{ flex:1, justifyContent:'center', padding:24}}>
       <ScrollView>

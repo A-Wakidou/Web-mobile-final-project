@@ -3,8 +3,7 @@ export { default as Details } from './Home/details'
 export { default as Explorer } from "./Explorer"
 export { default as Account } from "./Account"
 export { default as Login2 } from "./Account/login2"
-export { default as Register } from "./Account/register"
-export { default as Register2 } from "./Account/register2"
+//export { default as Register2 } from "./Account/register2"
 
 import React, { Component } from 'react'
 import { View, Text,Button } from 'react-native'
