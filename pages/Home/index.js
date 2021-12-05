@@ -23,7 +23,7 @@ const Home = ({navigation}) => {
   }, [])
 
   return (
-    <View style={{ flex:1, justifyContent:'center', padding:24}}>
+    <View style={{ flex:1, backgroundColor:'#fff', justifyContent:'center', padding:24}}>
       <ScrollView>
         <Text style={{fontWeight:'bold', fontSize:25,marginBottom:25, marginTop:20}}>Top prochaines sorties</Text>
         {isLoading ? <ActivityIndicator/> : (

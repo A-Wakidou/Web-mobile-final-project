@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import { ScrollView, View,Text,TextInput, StyleSheet, Button, FlatList,Image, TouchableOpacity} from "react-native"
-//import Card from '../../components/card'
+import Card from '../../components/card'
 const Explorer = ({navigation}) => {
 
   const [text, setText] = useState("");
@@ -23,7 +23,7 @@ const Explorer = ({navigation}) => {
   }
 
   return (
-    <View style={{flex:1}}>
+    <View style={{flex:1,backgroundColor:'#fff'}}>
       <TextInput
         style={styles.input}
         placeholder="Rechercher un anime"
@@ -38,10 +38,22 @@ const Explorer = ({navigation}) => {
           keyExtractor={(item) => item.title}
             renderItem={({ item }) => (
               <View style={{flex: 1}}>
-                  <TouchableOpacity style={{flex:1, flexDirection:'row'}} onPress={() => navigation.navigate('Details', {item})}>
-                    <Image style={{ width:180, height:150}} source={{uri:item.image_url}} />
-                    <Text style={{fontSize:12, fontWeight:'bold',marginTop:5, marginLeft:10, marginBottom:20}}>{item.title}</Text>
+                <Card>
+                  <TouchableOpacity style={{flex:1, flexDirection:'row'}} onPress={() => navigation.navigate('ExplorerDetails', {item})}>
+                    <Image style={{ width:180, height:200, borderRadius:5}} source={{uri:item.image_url}} />
+                    <View style={{flex:1,marginTop:10, marginLeft:15}}>
+                      <Text style={{fontSize:20, fontWeight:'bold'}}>{item.title}</Text>
+                      <Text style={{fontStyle:'italic', color:'tomato', fontSize:'15', marginTop:2}}>{ item.publishing ? 'En cours' : 'Terminé' }</Text>
+                      <View style={{flex:1, marginTop:10}}>
+                        <Text><Text style={{fontWeight:'bold'}}>Type : </Text>{item.type} </Text>
+                        <Text><Text style={{fontWeight:'bold'}}>Fans : </Text>{item.members} </Text>
+                        <Text><Text style={{fontWeight:'bold'}}>Score : </Text>{ item.score }</Text>
+                        <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>En savoir plus </Text>
+                      </View>
+
+                    </View>
                   </TouchableOpacity>
+                </Card>
               </View>
             )}
           />
@@ -57,6 +69,8 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 12,
     borderWidth: 1,
+    borderColor:'#DCDCDC',
     padding: 10,
+    borderRadius:4,
   }
 })

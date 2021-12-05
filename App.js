@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StatusBar} from 'expo-status-bar'
 import { StyleSheet, View,Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home,Details, Account,Explorer, Login2, Register2 } from "./pages"
+import { Home,Details, Account,Explorer, ExplorerDetails, Login2, Register2 } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,6 +29,7 @@ const app = initializeApp(firebaseConfig)
 const Tab = createBottomTabNavigator()
 const AccountStack = createNativeStackNavigator()
 const HomeStack = createNativeStackNavigator()
+const ExplorerStack = createNativeStackNavigator()
 
 function AccountStackScreens() {
   return (
@@ -36,6 +37,15 @@ function AccountStackScreens() {
       <AccountStack.Screen name="Account Informations" component={MainScreen} />
       <AccountStack.Screen name="Register" component={Register2} />
     </AccountStack.Navigator>
+  )
+}
+
+function ExplorerStackScreens() {
+  return(
+    <ExplorerStack.Navigator>
+      <ExplorerStack.Screen name="Explorer" component={Explorer} />
+      <ExplorerStack.Screen name="ExplorerDetails" component={ExplorerDetails} />
+    </ExplorerStack.Navigator>
   )
 }
 
@@ -101,7 +111,7 @@ export class App extends Component {
               )}} />
               <Tab.Screen
                 name="Explorer"
-                component={Explorer}
+                component={ExplorerStackScreens}
                 options={{
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="magnify" color={color} size={size} />

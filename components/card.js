@@ -3,9 +3,7 @@ import { StyleSheet, View } from 'react-native'
 export default function Card(props) {
     return (
         <View style={styles.card}>
-            <View style={styles.cardContent}>
-                {props.children}
-            </View>
+            {props.children}
         </View>
     )
 }
@@ -22,7 +20,7 @@ const styles = StyleSheet.create({
         shadowColor: '#333',
         shadowOpacity: 0.3,
         shadowRadius: 2,
-        marginHorizontal: 4,
-        marginVertical: 6
+        marginHorizontal: 10,
+        marginVertical: 10
     }
 })
