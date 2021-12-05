@@ -1,4 +1,5 @@
 export { default as Home } from "./Home"
+export { default as Details } from './Home/details'
 export { default as Explorer } from "./Explorer"
 export { default as Account } from "./Account"
 export { default as Login2 } from "./Account/login2"

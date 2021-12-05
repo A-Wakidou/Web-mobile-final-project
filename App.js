@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StatusBar} from 'expo-status-bar'
 import { StyleSheet, View,Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home,Account,Explorer, Login2, Register2 } from "./pages"
+import { Home,Details, Account,Explorer, Login2, Register2 } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -28,6 +28,7 @@ const app = initializeApp(firebaseConfig)
 
 const Tab = createBottomTabNavigator()
 const AccountStack = createNativeStackNavigator()
+const HomeStack = createNativeStackNavigator()
 
 function AccountStackScreens() {
   return (
@@ -35,6 +36,15 @@ function AccountStackScreens() {
       <AccountStack.Screen name="Account Informations" component={MainScreen} />
       <AccountStack.Screen name="Register" component={Register2} />
     </AccountStack.Navigator>
+  )
+}
+
+function HomeStackScreens() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen name="Home" component={Home} />
+      <HomeStack.Screen name="Details" component={Details} />
+    </HomeStack.Navigator>
   )
 }
 
@@ -80,10 +90,11 @@ export class App extends Component {
             screenOptions={({ route }) => ({
               tabBarActiveTintColor: 'tomato',
               tabBarInactiveTintColor: 'gray',
+              headerShown:false
             })}>
               <Tab.Screen
                 name="Home"
-                component={Home}
+                component={HomeStackScreens}
                 options={{
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home" color={color} size={size} />
