@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react"
-import { View,Text, TouchableOpacity, StyleSheet,FlatList, ActivityIndicator, Image, ScrollView } from "react-native"
-import Carousel from '../../components/carousel'
+import { View,SafeAreaView, Text, TouchableOpacity, StyleSheet,FlatList, ActivityIndicator, Image, ScrollView } from "react-native"
 
 const Home = ({navigation}) => {
 
@@ -24,7 +23,7 @@ const Home = ({navigation}) => {
 
   return (
     <View style={{ flex:1, backgroundColor:'#fff', justifyContent:'center', padding:24}}>
-      <ScrollView>
+      <SafeAreaView>
         <Text style={{fontWeight:'bold', fontSize:25,marginBottom:25, marginTop:20}}>Top prochaines sorties</Text>
         {isLoading ? <ActivityIndicator/> : (
           <FlatList
@@ -41,7 +40,7 @@ const Home = ({navigation}) => {
             )}
           />
         )}
-      </ScrollView>
+      </SafeAreaView>
     </View>
   )
 }

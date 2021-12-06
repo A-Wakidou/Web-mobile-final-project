@@ -3,7 +3,6 @@ import { View,  Button, TextInput} from 'react-native'
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
 
-const db = getFirestore();
 
 export class register2 extends Component {
     constructor(props) {
@@ -13,6 +12,7 @@ export class register2 extends Component {
             password: '',
             displayName: ''
         }
+        const db = getFirestore();
         this.onSignUp = this.onSignUp.bind(this)
     }
     onSignUp() {

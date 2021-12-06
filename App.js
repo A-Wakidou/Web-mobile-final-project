@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {StatusBar} from 'expo-status-bar'
-import { StyleSheet, View,Text } from 'react-native';
+import { StyleSheet, View,Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home,Details, Account,Explorer, ExplorerDetails, Login2, Register2 } from "./pages"
+import { Home,Details, Account,Explorer, ExplorerDetails, Login2, Register2, SearchResults, SearchResultsByCategory } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,7 +12,6 @@ import {Provider} from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers'
 import thunk from 'redux-thunk'
-import MainScreen from'./pages'
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const firebaseConfig = {
@@ -31,11 +30,19 @@ const AccountStack = createNativeStackNavigator()
 const HomeStack = createNativeStackNavigator()
 const ExplorerStack = createNativeStackNavigator()
 
-function AccountStackScreens() {
+function AccountStackScreensNotLoggedIn() {
   return (
     <AccountStack.Navigator>
-      <AccountStack.Screen name="Account Informations" component={MainScreen} />
+      <AccountStack.Screen name="Login" component={Login2} />
       <AccountStack.Screen name="Register" component={Register2} />
+    </AccountStack.Navigator>
+  )
+}
+
+function AccountStackScreensLoggedIn() {
+  return (
+    <AccountStack.Navigator>
+      <AccountStack.Screen name="Account" component={Account} />
     </AccountStack.Navigator>
   )
 }
@@ -44,6 +51,8 @@ function ExplorerStackScreens() {
   return(
     <ExplorerStack.Navigator>
       <ExplorerStack.Screen name="Explorer" component={Explorer} />
+      <ExplorerStack.Screen name="SearchResults" component={SearchResults} />
+      <ExplorerStack.Screen name="SearchResultsByCategory" component={SearchResultsByCategory} />
       <ExplorerStack.Screen name="ExplorerDetails" component={ExplorerDetails} />
     </ExplorerStack.Navigator>
   )
@@ -89,7 +98,7 @@ export class App extends Component {
     if(!loaded) {
       return(
         <View>
-          <Text>Loading</Text>
+          <ActivityIndicator/>
         </View>
       )
     }
@@ -103,14 +112,14 @@ export class App extends Component {
               headerShown:false
             })}>
               <Tab.Screen
-                name="Homes"
+                name="HomeTab"
                 component={HomeStackScreens}
                 options={{
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home" color={color} size={size} />
               )}} />
               <Tab.Screen
-                name="Explorer"
+                name="ExplorerTab"
                 component={ExplorerStackScreens}
                 options={{
                   tabBarIcon: ({ color, size }) => (
@@ -118,7 +127,7 @@ export class App extends Component {
               )}} />
               <Tab.Screen 
                 name="Account"
-                component={ loggedIn ? AccountStackScreens : Account}
+                component={ loggedIn ? AccountStackScreensLoggedIn : AccountStackScreensNotLoggedIn}
                 options={{
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account" color={color} size={size} />

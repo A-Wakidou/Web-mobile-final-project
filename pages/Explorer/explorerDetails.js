@@ -14,7 +14,7 @@ export default function ExplorerDetails({route, navigation}) {
                 <View style={{flex:1, marginLeft:15, marginTop:20, paddingBottom:10}}>
                     <Text style={styles.viewText}><Text style={styles.span}>Fans : </Text>{item.members}</Text>
                     <Text style={styles.viewText}><Text style={styles.span}>Score : </Text>{item.score}</Text>
-                    <Text style={styles.viewText}><Text style={styles.span}>Date de sortie : </Text>{item.start_date ? item.start_date.substring(0,10) : 'Dévoilée prochainement'}</Text>
+                    <Text style={styles.viewText}><Text style={styles.span}>Date de lancement : </Text>{item.start_date ? item.start_date.substring(0,10) : 'Dévoilée prochainement'}</Text>
                     { item.end_date!=null ?
                         <Text style={styles.viewText}><Text style={styles.span}>Date de fin : </Text>{item.end_date.substring(0,10)}</Text>
                         :
