@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {StatusBar} from 'expo-status-bar'
 import { StyleSheet, View,Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home,Details, Account,Explorer, ExplorerDetails, Login2, Register2, SearchResults, SearchResultsByCategory } from "./pages"
+import { Home,Details, Account,Explorer,ResetPassword, ExplorerDetails, Login, Register, SearchResults, SearchResultsByCategory } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -33,8 +33,9 @@ const ExplorerStack = createNativeStackNavigator()
 function AccountStackScreensNotLoggedIn() {
   return (
     <AccountStack.Navigator>
-      <AccountStack.Screen name="Login" component={Login2} />
-      <AccountStack.Screen name="Register" component={Register2} />
+      <AccountStack.Screen name="Login"  options={{title: 'Connexion'}} component={Login} />
+      <AccountStack.Screen name="Register"  options={{title: 'Inscription'}} component={Register} />
+      <AccountStack.Screen name="ResetPassword"  options={{title: 'Mot de passe oublié'}} component={ResetPassword} />
     </AccountStack.Navigator>
   )
 }
@@ -42,7 +43,7 @@ function AccountStackScreensNotLoggedIn() {
 function AccountStackScreensLoggedIn() {
   return (
     <AccountStack.Navigator>
-      <AccountStack.Screen name="Account" component={Account} />
+      <AccountStack.Screen name="Account"  options={{title: 'Compte'}} component={Account} />
     </AccountStack.Navigator>
   )
 }
@@ -51,9 +52,9 @@ function ExplorerStackScreens() {
   return(
     <ExplorerStack.Navigator>
       <ExplorerStack.Screen name="Explorer" component={Explorer} />
-      <ExplorerStack.Screen name="SearchResults" component={SearchResults} />
-      <ExplorerStack.Screen name="SearchResultsByCategory" component={SearchResultsByCategory} />
-      <ExplorerStack.Screen name="ExplorerDetails" component={ExplorerDetails} />
+      <ExplorerStack.Screen name="SearchResults"  options={{title: 'Résultats'}} component={SearchResults} />
+      <ExplorerStack.Screen name="SearchResultsByCategory"  options={{title: 'Résultats par genre'}} component={SearchResultsByCategory} />
+      <ExplorerStack.Screen name="ExplorerDetails"  options={{title: 'Détails'}} component={ExplorerDetails} />
     </ExplorerStack.Navigator>
   )
 }
@@ -62,7 +63,7 @@ function HomeStackScreens() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen name="Home" component={Home} />
-      <HomeStack.Screen name="Details" component={Details} />
+      <HomeStack.Screen name="Details" options={{title: 'Détails'}} component={Details} />
     </HomeStack.Navigator>
   )
 }
@@ -107,6 +108,7 @@ export class App extends Component {
           <NavigationContainer>
             <Tab.Navigator
             screenOptions={({ route }) => ({
+              tabBarStyle: {backgroundColor: '#21252b', color: 'white'},
               tabBarActiveTintColor: 'tomato',
               tabBarInactiveTintColor: 'gray',
               headerShown:false
@@ -115,6 +117,10 @@ export class App extends Component {
                 name="HomeTab"
                 component={HomeStackScreens}
                 options={{
+                  title:'Home',
+                  headerStyle: {
+                    backgroundColor: '#21252b',
+                  },
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home" color={color} size={size} />
               )}} />
@@ -122,13 +128,21 @@ export class App extends Component {
                 name="ExplorerTab"
                 component={ExplorerStackScreens}
                 options={{
+                  title: 'Explorer',
+                  headerStyle: {
+                    backgroundColor: '#21252b',
+                  },
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="magnify" color={color} size={size} />
               )}} />
               <Tab.Screen 
-                name="Account"
+                name="AccountTab"
                 component={ loggedIn ? AccountStackScreensLoggedIn : AccountStackScreensNotLoggedIn}
                 options={{
+                  title: 'Compte',
+                  headerStyle: {
+                    backgroundColor: '#21252b',
+                  },
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account" color={color} size={size} />
               )}} />

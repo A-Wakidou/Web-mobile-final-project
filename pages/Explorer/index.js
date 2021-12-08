@@ -76,24 +76,44 @@ const Explorer = ({navigation}) => {
   ]
 
   return (
-    <View style={{flex:1,backgroundColor:'#fff', paddingHorizontal:5}}>
+    <View style={{flex:1,backgroundColor:'#fff', paddingHorizontal:10, paddingTop:20 }}>
+      <Text style={{marginLeft:10, fontWeight:'bold', fontSize:15}}>Rechercher un anime</Text>
       <TextInput
         style={styles.input}
-        placeholder="Rechercher un anime"
+        placeholder="Exemple: Naruto, One piece..."
         onChangeText={text => setText(text)}
         value={text}
       />
       <Button title="Valider" onPress={(search)} />
-      <Text style={{fontWeight:'bold', fontSize:20, marginLeft:5,marginBottom:15,marginTop:15}}>Catégories</Text>
+      <View style={{paddingVertical:8, marginTop:20, marginBottom:10, paddingBottom:15, backgroundColor:'#21252b',borderRadius:4}}>
+          <Text style={{marginLeft:10, fontWeight:'bold',color:'white', fontSize:20}}>Catégories :</Text>
+      </View>
       {isLoading ? <ActivityIndicator style={{marginVertical:10}}/> : null}
       <SafeAreaView style={styles.container}>
         <FlatList
           data={categoriesList}
           numColumns="2"
           renderItem={({ item }) => (
+            <TouchableOpacity style={{width:'49%', marginVertical:5, marginRight:5}} onPress={() => {
+              const searchByCategory = async () => {
+                setLoading(true)
+                try {
+                  const response = await fetch('https://api.jikan.moe/v3/search/anime?q=&limit=20&genre='+item.id+'&order_by=score');
+                  const json = await response.json()
+                  const data = json.results
+                  setLoading(false);
+                  navigation.navigate('SearchResultsByCategory', {data:data, category:item.id})
+                } catch (error) {
+                  console.error(error);
+                } finally {
+                }
+              }
+              searchByCategory()
+            }}>
             <View
               style={{
-                width: '47%',
+                flex:1,
+                justifyContent:'center',
                 height:100,
                 borderRadius:5,
                 shadowOffset: {
@@ -103,31 +123,13 @@ const Explorer = ({navigation}) => {
                 shadowColor: '#333',
                 shadowOpacity: 0.3,
                 shadowRadius: 2,
-                marginVertical:5,
-                marginHorizontal:5,
                 backgroundColor:item.backgroundColor
               }}
             >
-                <TouchableOpacity onPress={() => {
-                  const searchByCategory = async () => {
-                    setLoading(true)
-                    try {
-                      const response = await fetch('https://api.jikan.moe/v3/search/anime?q=&limit=20&genre='+item.id+'&order_by=score');
-                      const json = await response.json()
-                      const data = json.results
-                      setLoading(false);
-                      navigation.navigate('SearchResultsByCategory', {data:data, category:item.id})
-                    } catch (error) {
-                      console.error(error);
-                    } finally {
-                    }
-                  }
-                  searchByCategory()
-                }}>
-                  <Text style={styles.cardText}>{item.name}</Text>
-                  <Text style={styles.cardText}>{item.japName}</Text>
-                </TouchableOpacity>
-              </View>
+              <Text style={styles.cardText}>{item.name}</Text>
+              <Text style={styles.cardText}>{item.japName}</Text>
+            </View>
+          </TouchableOpacity>
           )}
           keyExtractor={item => item.id}
         />
@@ -145,7 +147,8 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical:10,
     borderWidth: 1,
     borderColor:'#DCDCDC',
     padding: 10,

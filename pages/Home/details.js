@@ -1,14 +1,14 @@
 import React from 'react'
 import { ScrollView,View,Text, Image,StyleSheet, Button, Linking} from 'react-native'
 
-export default function Detail({route, navigation}) {
+export default function Detail({route}) {
     const {item} = route.params
     console.log(item)
     return (
         <ScrollView>
             <View style={{flex:1}}>
                 <Image style={{width:'100%',height:600}} source={{uri:item.image_url}} />
-                <View style={{borderBottomLeftRadius:4, borderBottomRightRadius:4, backgroundColor:'black',}}>
+                <View style={{borderBottomLeftRadius:10, borderBottomRightRadius:10, backgroundColor:'#21252b',}}>
                     <Text style={{textAlign:'center', fontSize:20, fontWeight:'bold', color:'white', paddingTop:15, paddingBottom:15}}>{item.title}</Text>
                 </View>
                 <View style={{flex:1, marginLeft:15, marginTop:20, paddingBottom:10}}>
