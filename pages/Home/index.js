@@ -19,7 +19,7 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     getMangas()
-  }, [])
+  }, []);
 
   return (
     <View style={{ flex:1, backgroundColor:'#fff', justifyContent:'center', padding:15, paddingTop:20}}>

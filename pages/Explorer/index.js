@@ -16,7 +16,7 @@ const Explorer = ({navigation}) => {
       const json = await response.json()
       const data = json.results
       setLoading(false);
-      navigation.navigate('SearchResults', {data})
+      navigation.navigate('SearchResults', {data:data, text:text})
     } catch (error) {
       console.error(error);
     }

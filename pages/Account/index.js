@@ -4,21 +4,31 @@ import {connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 import {fetchUser} from '../../redux/actions'
 import {getAuth, signOut} from 'firebase/auth'
+import {getDocs, getFirestore, collection} from 'firebase/firestore'
 import Card from '../../components/card'
 
-const logOut = () => {
-    const auth = getAuth();
-    signOut(auth).then(() => {
-      navigation.navigate('Login')
-    }).catch((error) => {
-      console.log(error)
-    })
-}
-
 export class index extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            data: [],
+        }
+    }
+
     componentDidMount() {
         this.props.fetchUser()
     }
+
+    logOut () {
+        const auth = getAuth();
+        signOut(auth).then(() => {
+          console.log('LogOut')
+        }).catch((error) => {
+          console.log(error)
+        })
+    }
+
     render() {
         const {currentUser} = this.props
         console.log(currentUser)
@@ -34,14 +44,14 @@ export class index extends Component {
                         <Text style={styles.title}>Informations du compte</Text>
                         <Text> <Text>Email: </Text> {currentUser.email}</Text>
                         <Text> <Text>Nom d'utilisateur: </Text> {currentUser.displayName}</Text>
-                        <TouchableOpacity style={{marginVertical:5, padding:5, textAlign:'center', fontWeight:'bold', backgroundColor:'tomato', borderRadius:4}} onPress={logOut}><Text style={{color:'white'}}>Déconnexion</Text></TouchableOpacity>
+                        <TouchableOpacity style={{marginVertical:15, padding:5, fontWeight:'bold', backgroundColor:'tomato', borderRadius:4}} onPress={() => this.logOut()}><Text style={{textAlign:'center', color:'white'}}>Déconnexion</Text></TouchableOpacity>
                     </View>
                 </Card>
                 <Card>
                     <View style={styles.card}>
                         <Text style={styles.title}>Favoris</Text>
                         <Text>Vos animes mis en favoris apparaîtront ici</Text>
-                        <TouchableOpacity style={{marginVertical:5, padding:5, color:'tomato', textAlign:'center', fontWeight:'bold', backgroundColor:'blue', borderRadius:4}} onPress={() => {this.props.navigation.navigate('ExplorerTab')}}><Text style={{color:'white'}}>Ajouter des animes en favoris</Text></TouchableOpacity>
+                        <TouchableOpacity style={{marginVertical:15, padding:5, color:'tomato', fontWeight:'bold', backgroundColor:'deepskyblue', borderRadius:4}} onPress={() => {this.props.navigation.navigate('ExplorerTab')}}><Text style={{color:'white',textAlign:'center'}}>Ajouter</Text></TouchableOpacity>
                     </View>
                 </Card>
             </View>
