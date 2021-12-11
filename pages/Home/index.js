@@ -29,7 +29,6 @@ const Home = ({navigation}) => {
         {isLoading ? <ActivityIndicator/> : (
         <SafeAreaView style={{flex:1}}>
           <FlatList
-            //ItemSeparatorComponent={() => <View style={{borderBottomColor: 'black', marginVertical:15, borderBottomWidth: 1}}/> }
             numColumns="2"
             data={data}
             keyExtractor={(item) => item.title}
@@ -41,7 +40,6 @@ const Home = ({navigation}) => {
                   <Text style={{fontSize:10,fontStyle:'italic', color:'tomato'}}>{item.start_date ? item.start_date : 'Date dévoilée prochainement'}</Text>
                   <View style={{flex:1, borderBottomColor: '#E7E7E7', marginTop:10, marginBottom:20, borderBottomWidth:1, width:'80%'}}/>
                 </TouchableOpacity>
-                
               </View>
             )}
           />

@@ -1,12 +1,28 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { SafeAreaView, View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
-import Card from '../../components/card'
+import { getFirestore,getDocs, collection, addDoc } from "firebase/firestore"
+import { connect } from 'react-redux'
 
-export default function searchResults({route, navigation}) {
+export default function searchResults(props) {
 
-  const {data} = route.params
-  const categoryId = route.params.category
+  const data = props.route.params.data
+  const categoryId = props.route.params.category
   var category =''
+  const [favAnimesAdded, setfavAnimesAdded] = useState([])
+
+  const db = getFirestore();
+
+  async function getFavorites() {
+    const querySnapshot = await getDocs(collection(db, "favorites"));
+    querySnapshot.forEach((doc) => {
+      setfavAnimesAdded(oldArray => [...oldArray, doc.data().animeId])
+    })
+  }
+
+  useEffect(() => {
+    getFavorites()
+  }, []);
+
   if(categoryId == 27) {
       category = 'Shônens'
   }
@@ -34,6 +50,7 @@ export default function searchResults({route, navigation}) {
   else if(categoryId ==14) {
       category = "Horreur"
   }
+
   return (
     <View style={{flex:1, padding:10, backgroundColor:'white'}}>
       <View style={{paddingVertical:8, backgroundColor:'#21252b',borderRadius:4, marginVertical:10}}>
@@ -46,7 +63,7 @@ export default function searchResults({route, navigation}) {
           keyExtractor={(item) => item.mal_id}
             renderItem={({ item }) => (
               <View style={{flex:1}}>
-                <View style={{flex: 1, flexDirection:'row'}}>
+                <View style={{flexDirection:'row'}}>
                   <Image style={{ width:180, height:300, borderRadius:5}} source={{uri:item.image_url}} />
                   <View style={{flex:1,marginTop:10, marginLeft:15}}>
                     <Text style={{fontSize:20, fontWeight:'bold'}}>{item.title}</Text>
@@ -55,16 +72,13 @@ export default function searchResults({route, navigation}) {
                       <Text><Text style={{fontWeight:'bold'}}>Type : </Text>{item.type} </Text>
                       <Text><Text style={{fontWeight:'bold'}}>Fans : </Text>{item.members} </Text>
                       <Text><Text style={{fontWeight:'bold'}}>Score : </Text>{ item.score }</Text>
-                      <TouchableOpacity onPress={() => navigation.navigate('ExplorerDetails', {item})}>
+                      <TouchableOpacity onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
                         <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>En savoir plus</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => { console.log(item.mal_id)}}>
-                        <Text style={{fontWeight:'bold', color:'tomato', marginTop:5, textDecorationLine:'underline'}}>Ajouter aux favoris</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-                <View style={{flex:1, alignItems:'center'}}>
+                <View style={{alignItems:'center'}}>
                   <View style={{flex:1, borderBottomColor: '#E7E7E7', marginVertical:5,width:'100%', borderBottomWidth:1}}/>
                 </View>
               </View>

@@ -1,6 +1,6 @@
 import {getAuth, signOut} from 'firebase/auth'
 import {getDocs, getFirestore, collection} from 'firebase/firestore'
-import { USER_STATE_CHANGE } from '../constants'
+import { USER_STATE_CHANGE, USER_FAVORITES_STATE_CHANGE } from '../constants'
 
 export function fetchUser() {
   return ((dispatch) => {
@@ -21,6 +21,18 @@ export function fetchUser() {
           }
         });
       }
+    async function getUserFavorites() {
+      const querySnapshot = await getDocs(collection(db, "favorites"));
+      querySnapshot.forEach((doc) => {
+        if(doc.data().userId == auth.currentUser.uid) {
+          dispatch({type: USER_FAVORITES_STATE_CHANGE, currentUserFavorites: doc.data()})
+        }
+        else {
+          console.log('Impossible de récuperer les faovirs')
+        }
+      })
+    }
       getUser()
+      getUserFavorites()
     })
 }

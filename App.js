@@ -9,6 +9,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {initializeApp} from 'firebase/app'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import {Provider} from 'react-redux'
+//import Store from './store/configureStore'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers'
 import thunk from 'redux-thunk'
