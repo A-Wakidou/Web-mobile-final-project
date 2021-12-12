@@ -2,18 +2,23 @@ import React, { useState } from 'react'
 import { Button, View, TextInput, StyleSheet, ActivityIndicator, Text, TouchableOpacity} from 'react-native'
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'
 import Card from '../../components/card'
+import {fetchUser} from '../../redux/actions'
+import { bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
 
-export default function Login({navigation}) {
-        const [loading, setLoading] = useState(false)
-        const [email, setEmail] = useState()
-        const [password, setPassword] = useState()
-        const [errorFetch, setErrorFetch] = useState()
+function Login(props) {
+
+    const [loading, setLoading] = useState(false)
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+    const [errorFetch, setErrorFetch] = useState()
 
     function onSignIn() {
         setLoading(true)
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
             .then( (result) => {
+                props.fetchUser()
                 console.log('LoggedIn')
                 setLoading(false)
             })
@@ -43,6 +48,15 @@ export default function Login({navigation}) {
         </Card>
     )
 }
+
+const mapStateToProps = (store) => ({
+    currentUser: store.userState.currentUser,
+    currentUserFavorites: store.userState.currentUserFavorites
+})
+
+const mapDispatchProps = (dispatch) => bindActionCreators({fetchUser}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(Login)
 
 const styles = StyleSheet.create({
     input: {

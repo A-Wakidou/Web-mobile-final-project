@@ -1,27 +1,17 @@
 import React, {useEffect, useState} from 'react'
 import { SafeAreaView, View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
-import { getFirestore,getDocs, collection, addDoc } from "firebase/firestore"
 import { connect } from 'react-redux'
+import { getFirestore, collection, addDoc } from "firebase/firestore"
+import {addToFavorites} from '../../redux/actions/addFavorites'
+import { bindActionCreators} from 'redux'
 
-export default function searchResults(props) {
+function searchResultsByCategory(props) {
 
   const data = props.route.params.data
   const categoryId = props.route.params.category
   var category =''
-  const [favAnimesAdded, setfavAnimesAdded] = useState([])
 
-  const db = getFirestore();
-
-  async function getFavorites() {
-    const querySnapshot = await getDocs(collection(db, "favorites"));
-    querySnapshot.forEach((doc) => {
-      setfavAnimesAdded(oldArray => [...oldArray, doc.data().animeId])
-    })
-  }
-
-  useEffect(() => {
-    getFavorites()
-  }, []);
+  //const currentUserFavorites = props.currentUserFavorites
 
   if(categoryId == 27) {
       category = 'Shônens'
@@ -51,6 +41,18 @@ export default function searchResults(props) {
       category = "Horreur"
   }
 
+  function add(item) {
+    /*const db = getFirestore();
+    addDoc(collection(db, "favorites"), {
+        animeId:item.mal_id,
+        animeImg:item.image_url,
+        animeName: item.title,
+        userId:props.currentUser.uid
+    })*/
+    props.addToFavorites(item)
+    console.log(props)
+  }
+
   return (
     <View style={{flex:1, padding:10, backgroundColor:'white'}}>
       <View style={{paddingVertical:8, backgroundColor:'#21252b',borderRadius:4, marginVertical:10}}>
@@ -75,6 +77,40 @@ export default function searchResults(props) {
                       <TouchableOpacity onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
                         <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>En savoir plus</Text>
                       </TouchableOpacity>
+                      {/* {
+                        currentUserFavorites ?
+                        props.currentUserFavorites.map( (value, i) => {
+                          if(value.animeId == item.mal_id){
+                            return (
+                              <Text key={i}>{value.animeName}</Text>
+                            )
+                          }
+                        })
+                        :
+                        null
+                      } */}
+                      {
+                        (function() {
+                          var formattedFavorites = false
+                          props.currentUserFavorites.forEach( function (element) {
+                            if(element.animeId == item.mal_id){
+                              formattedFavorites = true
+                            }
+                          })
+                          if(formattedFavorites){
+                            return (
+                              <Text style={{color:'tomato', fontSize:20}}>♥</Text>
+                            )
+                          }
+                          else {
+                            return (
+                              <TouchableOpacity onPress={() => add(item)}>
+                                <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
+                              </TouchableOpacity>
+                            )
+                          }
+                        })()
+                      }
                     </View>
                   </View>
                 </View>
@@ -88,3 +124,12 @@ export default function searchResults(props) {
     </View>
   )
 }
+
+const mapStateToProps = (store) => ({
+  currentUserFavorites: store.userState.currentUserFavorites,
+  currentUser: store.userState.currentUser
+})
+
+const mapDispatchProps = (dispatch) => bindActionCreators({addToFavorites}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(searchResultsByCategory)

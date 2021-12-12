@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StatusBar} from 'expo-status-bar'
-import { StyleSheet, View,Text, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Home,Details, Account,Explorer,ResetPassword, ExplorerDetails, Login, Register, SearchResults, SearchResultsByCategory } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -9,10 +9,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {initializeApp} from 'firebase/app'
 import {getAuth, onAuthStateChanged} from 'firebase/auth'
 import {Provider} from 'react-redux'
-//import Store from './store/configureStore'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './redux/reducers'
 import thunk from 'redux-thunk'
+
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const firebaseConfig = {
@@ -69,94 +69,78 @@ function HomeStackScreens() {
   )
 }
 
-export class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loaded: false,
-    }
-  }
+export default function App(props) {
 
-  componentDidMount() {
+  const[loaded, setLoaded] = useState(false)
+  const[loggedIn, setLoggedIn] = useState(false)  
+
+  useEffect(() => {
     const auth = getAuth();
     onAuthStateChanged(auth,(user) => {
       if(!user) {
-        this.setState({
-          loggedIn: false,
-          loaded:true
-        })
+        setLoggedIn(false)
+        setLoaded(true)
       }
       else {
-        this.setState({
-          loggedIn: true,
-          loaded: true
-        })
+        setLoggedIn(true)
+        setLoaded(true)
       }
     })
-  }
+  },[]);
 
-  render() {
-    const {loggedIn, loaded } = this.state
-    if(!loaded) {
-      return(
-        <View>
-          <ActivityIndicator/>
-        </View>
-      )
-    }
-      return (
-        <Provider store={store}>
-          <NavigationContainer>
-            <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarStyle: {backgroundColor: '#21252b', color: 'white'},
-              tabBarActiveTintColor: 'tomato',
-              tabBarInactiveTintColor: 'gray',
-              headerShown:false
-            })}>
-              <Tab.Screen
-                name="HomeTab"
-                component={HomeStackScreens}
-                options={{
-                  title:'Home',
-                  headerStyle: {
-                    backgroundColor: '#21252b',
-                  },
-                  tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="home" color={color} size={size} />
-              )}} />
-              <Tab.Screen
-                name="ExplorerTab"
-                component={ExplorerStackScreens}
-                options={{
-                  title: 'Explorer',
-                  headerStyle: {
-                    backgroundColor: '#21252b',
-                  },
-                  tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="magnify" color={color} size={size} />
-              )}} />
-              <Tab.Screen 
-                name="AccountTab"
-                component={ loggedIn ? AccountStackScreensLoggedIn : AccountStackScreensNotLoggedIn}
-                options={{
-                  title: 'Compte',
-                  headerStyle: {
-                    backgroundColor: '#21252b',
-                  },
-                  tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="account" color={color} size={size} />
-              )}} />
-            </Tab.Navigator>
-            <StatusBar style="auto"/>
-          </NavigationContainer>
-        </Provider>
-      )
+  if(!loaded) {
+    return(
+      <View>
+        <ActivityIndicator/>
+      </View>
+    )
   }
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: {backgroundColor: '#21252b', color: 'white'},
+          tabBarActiveTintColor: 'tomato',
+          tabBarInactiveTintColor: 'gray',
+          headerShown:false
+        })}>
+          <Tab.Screen
+            name="HomeTab"
+            component={HomeStackScreens}
+            options={{
+              title:'Home',
+              headerStyle: {
+                backgroundColor: '#21252b',
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="home" color={color} size={size} />
+          )}} />
+          <Tab.Screen
+            name="ExplorerTab"
+            component={ExplorerStackScreens}
+            options={{
+              title: 'Explorer',
+              headerStyle: {
+                backgroundColor: '#21252b',
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="magnify" color={color} size={size} />
+          )}} />
+          <Tab.Screen 
+            name="AccountTab"
+            component={ loggedIn ? AccountStackScreensLoggedIn : AccountStackScreensNotLoggedIn}
+            options={{
+              title: 'Compte',
+              headerStyle: {
+                backgroundColor: '#21252b',
+              },
+              tabBarIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="account" color={color} size={size} />
+          )}} />
+        </Tab.Navigator>
+        <StatusBar style="auto"/>
+      </NavigationContainer>
+    </Provider>
+  )
 }
-
-export default App
-
-const styles = StyleSheet.create({
-
-});

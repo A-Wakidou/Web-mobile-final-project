@@ -1,42 +1,37 @@
 import React, { useEffect } from 'react'
-import { View, Text,Button, ActivityIndicator,StyleSheet, TouchableOpacity } from 'react-native'
-import {connect} from 'react-redux'
-import { bindActionCreators} from 'redux'
-import {fetchUser} from '../../redux/actions'
+import { ScrollView, View, Text,Button, ActivityIndicator,StyleSheet, TouchableOpacity } from 'react-native'
 import {getAuth, signOut} from 'firebase/auth'
 import {getDocs, getFirestore, collection} from 'firebase/firestore'
 import Card from '../../components/card'
+import {connect} from 'react-redux'
 
 function index (props){
 
-    useEffect(() => {
-        props.fetchUser()
-      }, []);
+    const auth = getAuth();
 
     function logOut () {
-        const auth = getAuth();
         signOut(auth).then(() => {
           console.log('LogOut')
         }).catch((error) => {
           console.log(error)
         })
     }
-
-    const currentUser = props.currentUser
+    
+    //const currentUser = props.currentUser
     const currentUserFavorites = props.currentUserFavorites
 
-    if(currentUser==undefined) {
+    if(auth.currentUser==undefined) {
         return(
             <View></View>
         )
     }
     return (
-        <View>
+        <ScrollView>
             <Card>
                 <View style={styles.card}>
                     <Text style={styles.title}>Informations du compte</Text>
-                    <Text> <Text>Email: </Text> {currentUser.email}</Text>
-                    <Text> <Text>Nom d'utilisateur: </Text> {currentUser.displayName}</Text>
+                    <Text> <Text>Email: </Text> {auth.currentUser.email}</Text>
+                    <Text> <Text>Nom d'utilisateur: </Text> {auth.currentUser.displayName}</Text>
                     <TouchableOpacity style={{marginVertical:15, padding:5, fontWeight:'bold', backgroundColor:'tomato', borderRadius:4}} onPress={() => logOut()}><Text style={{textAlign:'center', color:'white'}}>Déconnexion</Text></TouchableOpacity>
                 </View>
             </Card>
@@ -57,16 +52,16 @@ function index (props){
                     <TouchableOpacity style={{marginVertical:15, padding:5, color:'tomato', fontWeight:'bold', backgroundColor:'deepskyblue', borderRadius:4}} onPress={() => {props.navigation.navigate('ExplorerTab')}}><Text style={{color:'white',textAlign:'center'}}>Ajouter</Text></TouchableOpacity>
                 </View>
             </Card>
-        </View>
+        </ScrollView>
     )
 }
+
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
     currentUserFavorites: store.userState.currentUserFavorites
 })
-const mapDispatchProps = (dispatch) => bindActionCreators({fetchUser}, dispatch)
 
-export default connect(mapStateToProps, mapDispatchProps)(index)
+export default connect(mapStateToProps)(index)
 
 const styles = StyleSheet.create({
     card:{

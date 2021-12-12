@@ -1,46 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView,View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
-import { getFirestore,getDocs, collection, addDoc } from "firebase/firestore"
 import { connect } from 'react-redux'
 
 function searchResults(props) {
 
     const data = props.route.params.data
     const text = props.route.params.text
-    const [isadded, setIsAdded] = useState()
-    const [favAnimesAdded, setfavAnimesAdded] = useState([])
-    const db = getFirestore();
+    const currentUserFavorites = props.currentUserFavorites
 
-    async function getFavorites() {
-      const querySnapshot = await getDocs(collection(db, "favorites"));
-      querySnapshot.forEach((doc) => {
-        setfavAnimesAdded(oldArray => [...oldArray, doc.data().animeId])
-      })
-    }
-
-    function isFavorite(mal_id) {
-      for(var i=0; i<favAnimesAdded.length;i++){
-        console.log(favAnimesAdded[i])
-        if(favAnimesAdded[i] == mal_id) {
-          return(
-            <View style={{paddingVertical:8, backgroundColor:'#21252b',borderRadius:4, marginVertical:10}}>
-              <Text style={{ width:'60%', padding:5, marginLeft:8, fontWeight:'bold',color:'tomato', fontSize:20, borderWidth:1, borderColor:'white'}}>[Favoris]</Text>
-            </View>  
-          )
-        }
-        else{
-          return(
-          <TouchableOpacity onPress={() => { console.log(item.mal_id)}}>
-          <Text style={{fontWeight:'bold', color:'tomato', marginTop:5, textDecorationLine:'underline'}}>Ajouter aux favoris</Text>
-          </TouchableOpacity>
-          )
-        }
-      }
-    }
-
-    useEffect(() => {
-      getFavorites()
-    }, []);
     return (
       <View style={{flex:1, padding:10, backgroundColor:'white'}}>
         <View style={{paddingVertical:8, backgroundColor:'#21252b',borderRadius:4, marginVertical:10}}>
@@ -65,8 +32,40 @@ function searchResults(props) {
                     <TouchableOpacity style={{marginTop:5}} onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
                       <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)'}}>En savoir plus</Text>
                     </TouchableOpacity>
+                    {/* {
+                        currentUserFavorites ?
+                        props.currentUserFavorites.map( (value, i) => {
+                          if(value.animeId == item.mal_id){
+                            return (
+                              <Text key={i} style={{color:'tomato', fontSize:20}}>♥</Text>
+                            )
+                          }
+                        })
+                        :
+                        null
+                    } */}
                       {
-                        isFavorite(item.mal_id)
+                        (function() {
+                          var formattedFavorites = false
+                          props.currentUserFavorites.forEach( function (element) {
+                            if(element.animeId == item.mal_id){
+                              formattedFavorites = true
+                            }
+                          })
+                          console.log(formattedFavorites)
+                          if(formattedFavorites){
+                            return (
+                              <Text style={{color:'tomato', fontSize:20}}>♥</Text>
+                            )
+                          }
+                          else {
+                            return (
+                              <TouchableOpacity onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
+                                <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
+                              </TouchableOpacity>
+                            )
+                          }
+                        })()
                       }
                   </View>
                 </View>
@@ -83,10 +82,8 @@ function searchResults(props) {
     )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    favoritesAnime: state.favoritesAnime
-  }
-}
+const mapStateToProps = (store) => ({
+  currentUserFavorites: store.userState.currentUserFavorites
+})
 
 export default connect(mapStateToProps)(searchResults)

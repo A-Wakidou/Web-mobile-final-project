@@ -11,6 +11,7 @@ export function fetchUser() {
         querySnapshot.forEach((doc) => {
           if(doc.data().uid == auth.currentUser.uid) {
             dispatch({type: USER_STATE_CHANGE, currentUser: doc.data()})
+            console.log('Profil récupéré')
           }
           else {
             console.log('Impossible de récuperer le profil')
@@ -22,10 +23,11 @@ export function fetchUser() {
         });
       }
     async function getUserFavorites() {
-      const querySnapshot = await getDocs(collection(db, "favorites"));
+      const querySnapshot = await getDocs(collection(db, "favorites"))
       querySnapshot.forEach((doc) => {
         if(doc.data().userId == auth.currentUser.uid) {
           dispatch({type: USER_FAVORITES_STATE_CHANGE, currentUserFavorites: doc.data()})
+          console.log('Favoris récupéré')
         }
         else {
           console.log('Impossible de récuperer les faovirs')
