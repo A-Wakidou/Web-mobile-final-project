@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View,  Button, TextInput, StyleSheet, Keyboard} from 'react-native'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
 import Card from '../../components/card'
 
@@ -20,17 +20,23 @@ export class Register extends Component {
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
             .then( (result) => {
-                try {
-                    const db = getFirestore();
-                    addDoc(collection(db, "users"), {
-                        email:result.user.email,
-                        displayName:displayName,
-                        uid: result.user.uid
+                updateProfile(auth.currentUser, {
+                    displayName: displayName
+                })
+                    .then( () => {
+                        try {
+                            const db = getFirestore();
+                            addDoc(collection(db, "users"), {
+                                email:result.user.email,
+                                displayName:displayName,
+                                uid: result.user.uid
+                            })
+                            Keyboard.dismiss()
+                        } 
+                        catch (e) {
+                            console.error("Error adding document: ", e);
+                        }
                     })
-                    Keyboard.dismiss()
-                  } catch (e) {
-                    console.error("Error adding document: ", e);
-                  }
             })
             .catch( (error) => {
                 console.log(error)
