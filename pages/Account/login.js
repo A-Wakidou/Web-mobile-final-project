@@ -38,8 +38,8 @@ function Login(props) {
                 { errorFetch ?<Text style={{textAlign:'center', color:'red', marginVertical:5}}>Erreur: {errorFetch} </Text> : null }
             <Button onPress={onSignIn} title="Valider" />
             <View style={{marginVertical:10}}>
-                <TouchableOpacity style={{marginVertical:2, color:'tomato', textAlign:'center', fontWeight:'bold', textDecorationLine:'underline'}} onPress={ () => navigation.navigate('Register')}><Text>Inscription</Text></TouchableOpacity>
-                <TouchableOpacity style={{marginVertical:2, color:'tomato', textAlign:'center', fontWeight:'bold', textDecorationLine:'underline'}} onPress={ () => navigation.navigate('ResetPassword')}><Text>Mot de passe oublié </Text></TouchableOpacity>
+                <TouchableOpacity style={{marginVertical:2, color:'tomato', textAlign:'center', fontWeight:'bold', textDecorationLine:'underline'}} onPress={ () => props.navigation.navigate('Register')}><Text>Inscription</Text></TouchableOpacity>
+                <TouchableOpacity style={{marginVertical:2, color:'tomato', textAlign:'center', fontWeight:'bold', textDecorationLine:'underline'}} onPress={ () => props.navigation.navigate('ResetPassword')}><Text>Mot de passe oublié </Text></TouchableOpacity>
             </View>
             {
                 loading ? <ActivityIndicator style={{marginVertical:20}} /> : null

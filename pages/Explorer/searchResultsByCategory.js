@@ -11,8 +11,6 @@ function searchResultsByCategory(props) {
   const categoryId = props.route.params.category
   var category =''
 
-  //const currentUserFavorites = props.currentUserFavorites
-
   if(categoryId == 27) {
       category = 'Shônens'
   }
@@ -41,6 +39,8 @@ function searchResultsByCategory(props) {
       category = "Horreur"
   }
 
+  const currentUserFavorites = props.currentUserFavorites
+
   function add(item) {
     /*const db = getFirestore();
     addDoc(collection(db, "favorites"), {
@@ -50,7 +50,37 @@ function searchResultsByCategory(props) {
         userId:props.currentUser.uid
     })*/
     props.addToFavorites(item)
-    console.log(props)
+  }
+
+  function isFavorite(item) {
+    var favorites = props.currentUserFavorites.filter(favorites => favorites.animeId == item.mal_id || favorites.mal_id == item.mal_id)
+    /*favorites.map( (element ,i) => {
+      console.log(element)
+      if(element.animeId == item.mal_id){
+          return(
+          <Text style={{color:'tomato', fontSize:20}}>♥</Text>
+          )
+        }
+      else {
+        return(
+          <TouchableOpacity onPress={() => add(item)}>
+            <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
+          </TouchableOpacity>
+        )
+      }
+    })*/
+    if(favorites.length != 0){
+      return(
+      <Text style={{color:'tomato', fontSize:20}}>♥</Text>
+      )
+    }
+    else {
+      return(
+        <TouchableOpacity onPress={() => add(item)}>
+          <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
+        </TouchableOpacity>
+      )
+    }
   }
 
   return (
@@ -63,7 +93,7 @@ function searchResultsByCategory(props) {
           data={data}
           extraData={data}
           keyExtractor={(item) => item.mal_id}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <View style={{flex:1}}>
                 <View style={{flexDirection:'row'}}>
                   <Image style={{ width:180, height:300, borderRadius:5}} source={{uri:item.image_url}} />
@@ -89,28 +119,9 @@ function searchResultsByCategory(props) {
                         :
                         null
                       } */}
-                      {
-                        (function() {
-                          var formattedFavorites = false
-                          props.currentUserFavorites.forEach( function (element) {
-                            if(element.animeId == item.mal_id){
-                              formattedFavorites = true
-                            }
-                          })
-                          if(formattedFavorites){
-                            return (
-                              <Text style={{color:'tomato', fontSize:20}}>♥</Text>
-                            )
-                          }
-                          else {
-                            return (
-                              <TouchableOpacity onPress={() => add(item)}>
-                                <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
-                              </TouchableOpacity>
-                            )
-                          }
-                        })()
-                      }
+                    {
+                      isFavorite(item)
+                    }
                     </View>
                   </View>
                 </View>

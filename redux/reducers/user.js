@@ -4,7 +4,6 @@ const initialState = {
 }
 
 export const user = (state = initialState, action) => {
-    //console.log(action.currentUserFavorites)
     switch(action.type) {
         default:
             return state
@@ -13,7 +12,7 @@ export const user = (state = initialState, action) => {
                 ...state,
                 currentUser: action.currentUser,
             }
-        case 'USER_FAVORITES_STATE_CHANGE':
+        case 'USER_GET_FAVORITES':
             return {
                 ...state,
                 currentUserFavorites: [...state.currentUserFavorites, action.currentUserFavorites],

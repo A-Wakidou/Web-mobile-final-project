@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { SafeAreaView,View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
 import { connect } from 'react-redux'
+import {addToFavorites} from '../../redux/actions/addFavorites'
+import { bindActionCreators} from 'redux'
+import {fetchUser} from '../../redux/actions'
 
 function searchResults(props) {
 
     const data = props.route.params.data
     const text = props.route.params.text
     const currentUserFavorites = props.currentUserFavorites
+
+    function addItem(item) {
+      props.addToFavorites(item)
+    }
 
     return (
       <View style={{flex:1, padding:10, backgroundColor:'white'}}>
@@ -60,7 +67,7 @@ function searchResults(props) {
                           }
                           else {
                             return (
-                              <TouchableOpacity onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
+                              <TouchableOpacity onPress={() => addItem(item)}>
                                 <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
                               </TouchableOpacity>
                             )
@@ -83,7 +90,10 @@ function searchResults(props) {
 }
 
 const mapStateToProps = (store) => ({
+  currentUser: store.userState.currentUser,
   currentUserFavorites: store.userState.currentUserFavorites
 })
 
-export default connect(mapStateToProps)(searchResults)
+const mapDispatchProps = (dispatch) => bindActionCreators({addToFavorites}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchProps)(searchResults)
