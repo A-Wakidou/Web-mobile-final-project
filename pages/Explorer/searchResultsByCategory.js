@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import { SafeAreaView, View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
 import { connect } from 'react-redux'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
@@ -39,36 +39,19 @@ function searchResultsByCategory(props) {
       category = "Horreur"
   }
 
-  const currentUserFavorites = props.currentUserFavorites
-
   function add(item) {
-    /*const db = getFirestore();
+    const db = getFirestore();
     addDoc(collection(db, "favorites"), {
-        animeId:item.mal_id,
-        animeImg:item.image_url,
-        animeName: item.title,
-        userId:props.currentUser.uid
-    })*/
+        uid:props.currentUser.uid,
+        mal_id:item.mal_id,
+        title: item.title,
+        image_url:item.image_url
+    })
     props.addToFavorites(item)
   }
 
   function isFavorite(item) {
-    var favorites = props.currentUserFavorites.filter(favorites => favorites.animeId == item.mal_id || favorites.mal_id == item.mal_id)
-    /*favorites.map( (element ,i) => {
-      console.log(element)
-      if(element.animeId == item.mal_id){
-          return(
-          <Text style={{color:'tomato', fontSize:20}}>♥</Text>
-          )
-        }
-      else {
-        return(
-          <TouchableOpacity onPress={() => add(item)}>
-            <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
-          </TouchableOpacity>
-        )
-      }
-    })*/
+    var favorites = props.currentUserFavorites.filter(favorites => favorites.mal_id == item.mal_id)
     if(favorites.length != 0){
       return(
       <Text style={{color:'tomato', fontSize:20}}>♥</Text>
@@ -93,7 +76,7 @@ function searchResultsByCategory(props) {
           data={data}
           extraData={data}
           keyExtractor={(item) => item.mal_id}
-            renderItem={({ item, index }) => (
+            renderItem={({ item }) => (
               <View style={{flex:1}}>
                 <View style={{flexDirection:'row'}}>
                   <Image style={{ width:180, height:300, borderRadius:5}} source={{uri:item.image_url}} />
@@ -107,21 +90,9 @@ function searchResultsByCategory(props) {
                       <TouchableOpacity onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
                         <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>En savoir plus</Text>
                       </TouchableOpacity>
-                      {/* {
-                        currentUserFavorites ?
-                        props.currentUserFavorites.map( (value, i) => {
-                          if(value.animeId == item.mal_id){
-                            return (
-                              <Text key={i}>{value.animeName}</Text>
-                            )
-                          }
-                        })
-                        :
-                        null
-                      } */}
-                    {
-                      isFavorite(item)
-                    }
+                      {
+                        isFavorite(item)
+                      }
                     </View>
                   </View>
                 </View>

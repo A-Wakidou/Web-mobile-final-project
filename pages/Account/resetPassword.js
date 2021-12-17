@@ -6,12 +6,10 @@ import Card from '../../components/card'
 export default function resetPassword({navigation}) {
 
     const[email,setEmail]= useState()
-    const [success, setSuccess] = useState(false)
     function onResetPassword() {
         sendPasswordResetEmail(auth, email)
         .then((result) => {
             console.log(result)
-            setSuccess(true)
         })
         .catch((error) => {
             const errorCode = error.code;

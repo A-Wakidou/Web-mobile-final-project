@@ -23,7 +23,6 @@ export const user = (state = initialState, action) => {
                 currentUserFavorites: [...state.currentUserFavorites, action.addedItem]
             }
         case 'USER_DELETE_FAVORITES':
-            console.log('user delte')
             return {
                 ...state,
                 currentUserFavorites: [...state.currentUserFavorites.slice(0, action.i), ...state.currentUserFavorites.slice(action.i +1)]

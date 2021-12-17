@@ -3,7 +3,6 @@ import { ScrollView,View,Text, Image,StyleSheet, Button, Linking} from 'react-na
 
 export default function Detail({route}) {
     const {item} = route.params
-    console.log(item)
     return (
         <ScrollView>
             <View style={{flex:1}}>

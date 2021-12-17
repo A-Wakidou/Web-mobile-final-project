@@ -24,7 +24,6 @@ const Home = ({navigation}) => {
     try {
       const response = await fetch('https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=5');
       const json = await response.json()
-      console.log(json)
       setDataByPopularity(json.results);
     } catch (error) {
       console.error(error);

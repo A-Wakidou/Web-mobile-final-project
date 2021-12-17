@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { SafeAreaView,View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
 import { connect } from 'react-redux'
 import {addToFavorites} from '../../redux/actions/addFavorites'
 import { bindActionCreators} from 'redux'
-import {fetchUser} from '../../redux/actions'
+import { getFirestore, collection, addDoc } from "firebase/firestore"
 
 function searchResults(props) {
 
     const data = props.route.params.data
     const text = props.route.params.text
-    const currentUserFavorites = props.currentUserFavorites
 
     function addItem(item) {
+      const db = getFirestore();
+      addDoc(collection(db, "favorites"), {
+          uid:props.currentUser.uid,
+          mal_id:item.mal_id,
+          title: item.title,
+          image_url:item.image_url
+      })
       props.addToFavorites(item)
     }
 
@@ -39,41 +45,28 @@ function searchResults(props) {
                     <TouchableOpacity style={{marginTop:5}} onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
                       <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)'}}>En savoir plus</Text>
                     </TouchableOpacity>
-                    {/* {
-                        currentUserFavorites ?
-                        props.currentUserFavorites.map( (value, i) => {
-                          if(value.animeId == item.mal_id){
-                            return (
-                              <Text key={i} style={{color:'tomato', fontSize:20}}>♥</Text>
-                            )
+                    {
+                      (function() {
+                        var formattedFavorites = false
+                        props.currentUserFavorites.forEach( function (element) {
+                          if(element.mal_id == item.mal_id){
+                            formattedFavorites = true
                           }
                         })
-                        :
-                        null
-                    } */}
-                      {
-                        (function() {
-                          var formattedFavorites = false
-                          props.currentUserFavorites.forEach( function (element) {
-                            if(element.animeId == item.mal_id){
-                              formattedFavorites = true
-                            }
-                          })
-                          console.log(formattedFavorites)
-                          if(formattedFavorites){
-                            return (
-                              <Text style={{color:'tomato', fontSize:20}}>♥</Text>
-                            )
-                          }
-                          else {
-                            return (
-                              <TouchableOpacity onPress={() => addItem(item)}>
-                                <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
-                              </TouchableOpacity>
-                            )
-                          }
-                        })()
-                      }
+                        if(formattedFavorites){
+                          return (
+                            <Text style={{color:'tomato', fontSize:20}}>♥</Text>
+                          )
+                        }
+                        else {
+                          return (
+                            <TouchableOpacity onPress={() => addItem(item)}>
+                              <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
+                            </TouchableOpacity>
+                          )
+                        }
+                      })()
+                    }
                   </View>
                 </View>
               </View>

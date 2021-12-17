@@ -26,7 +26,7 @@ function index (props){
     async function deleteFavorite(item, i) {
         const querySnapshot = await getDocs(collection(db, "favorites"));
         querySnapshot.forEach((doc) => {
-            if(doc.data().animeId == item.animeId && doc.data().userId == auth.currentUser.uid) {
+            if(doc.data().mal_id == item.mal_id && doc.data().uid == auth.currentUser.uid) {
                 deleteDocument(doc.id.toString())
                 props.deleteFromFavorites(i)
             }
@@ -35,8 +35,6 @@ function index (props){
             }
         })
     }
-
-
     
     if(auth.currentUser==undefined) {
         return(
@@ -59,13 +57,14 @@ function index (props){
                 <View style={styles.card}>
                     <Text style={styles.title}>Favoris</Text>
                     {
-                        props.currentUserFavorites ?
+                        props.currentUserFavorites.length > 0 ?
                         props.currentUserFavorites.map( (item, i) => {
+                            console.log(item)
                             return (
                                 <View key={i} style={{flex:1}}>
                                     <View style={{alignItems:'center', height:270, marginVertical:10}}>
-                                        <Image style={{width:'50%', height:150}} source={{uri:item.animeImg}}/>
-                                        <Text style={{textAlign:'center', marginVertical:10, fontStyle:'italic', fontWeight:'bold'}}>{item.animeName || item.title}</Text>
+                                        <Image style={{width:'50%', height:150}} source={{uri:item.image_url}}/>
+                                        <Text style={{textAlign:'center', marginVertical:10, fontStyle:'italic', fontWeight:'bold'}}>{item.title}</Text>
                                         <TouchableOpacity style={{width:'50%',marginVertical:5, padding:5, fontWeight:'bold', backgroundColor:'#373F51', borderRadius:4}} onPress={() => deleteFavorite(item)}><Text style={{textAlign:'center', color:'white'}}>Activer les notifications</Text></TouchableOpacity>
                                         <TouchableOpacity style={{width:'50%',marginVertical:5, padding:5, fontWeight:'bold', backgroundColor:'#ff2919', borderRadius:4}} onPress={() => deleteFavorite(item, i)}><Text style={{textAlign:'center', color:'white'}}>Retirer</Text></TouchableOpacity>
                                     </View>
@@ -74,7 +73,7 @@ function index (props){
                             )
                         })
                         :
-                        <Text>Vos animes mis en favoris apparaîtront ici</Text>
+                        <Text>Vos animes ajoutés en favoris apparaîtront ici</Text>
                     }
                     <TouchableOpacity style={{marginVertical:15, padding:5, color:'tomato', fontWeight:'bold', backgroundColor:'deepskyblue', borderRadius:4}} onPress={() => {props.navigation.navigate('ExplorerTab')}}><Text style={{color:'white',textAlign:'center'}}>Ajouter</Text></TouchableOpacity>
                 </View>

@@ -1,22 +1,21 @@
-import React, { Component } from 'react'
-import { View,  Button, TextInput, StyleSheet, Keyboard} from 'react-native'
+import React, {useState} from 'react'
+import { View,  Button, TextInput,ActivityIndicator, StyleSheet, Keyboard} from 'react-native'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
 import Card from '../../components/card'
 
-export class Register extends Component {
-    
-    constructor(props) {
-        super(props)
-        this.state = {
-            email: '',
-            password: '',
-            displayName: ''
-        }
-        this.onSignUp = this.onSignUp.bind(this)
-    }
-    onSignUp() {
-        const { email, password, displayName} = this.state
+function Register(props) {
+
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+    const [displayName, setDisplayName] = useState()
+    const [loading, setLoading] = useState(false)
+    const [errorFetch, setErrorFetch] = useState()
+
+    function onSignUp() {
+        Keyboard.dismiss()
+        setLoading(true)
+        const db = getFirestore();
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
             .then( (result) => {
@@ -25,36 +24,41 @@ export class Register extends Component {
                 })
                     .then( () => {
                         try {
-                            const db = getFirestore();
                             addDoc(collection(db, "users"), {
                                 email:result.user.email,
                                 displayName:displayName,
                                 uid: result.user.uid
                             })
-                            Keyboard.dismiss()
+                            setLoading(false)
                         } 
                         catch (e) {
                             console.error("Error adding document: ", e);
+                            setLoading(false)
+                            setErrorFetch(error.code)
                         }
                     })
             })
             .catch( (error) => {
                 console.log(error)
+                setLoading(false)
+                setErrorFetch(error.code)
             })
 
     }
-    render() {
-        return (
-            <Card style={styles.card}>
-                <View style={styles.view}>
-                    <TextInput style={styles.input} placeholder="Name" onChangeText={(displayName) => this.setState({displayName})} />
-                    <TextInput style={styles.input} placeholder="Email" onChangeText={(email) => this.setState({email})} />
-                    <TextInput style={styles.input} placeholder="Password" secureTextEntry={true}  onChangeText={(password) => this.setState({password})} />
-                    <Button onPress={ () => this.onSignUp()} title="Sign up" />
-                </View>
-            </Card>
-        )
-    }
+    return (
+        <Card style={styles.card}>
+            <View style={styles.view}>
+                <TextInput style={styles.input} placeholder="Name" onChangeText={(displayName) => setDisplayName(displayName)} />
+                <TextInput style={styles.input} placeholder="Email" onChangeText={(email) => setEmail(email)} />
+                <TextInput style={styles.input} placeholder="Password" secureTextEntry={true}  onChangeText={(password) => setPassword(password)} />
+                <Button onPress={ () => onSignUp()} title="Sign up" />
+                { errorFetch ?<Text style={{textAlign:'center', color:'red', marginVertical:5}}>Erreur: {errorFetch} </Text> : null }
+                {
+                    loading ? <ActivityIndicator style={{marginVertical:20}} /> : null
+                }
+            </View>
+        </Card>
+    )
 }
 
 export default Register
