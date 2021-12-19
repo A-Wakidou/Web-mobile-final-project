@@ -6,17 +6,19 @@ import Card from '../../components/card'
 import {connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 import {deleteFromFavorites} from '../../redux/actions/deleteFavorites'
+import {userLogOut} from '../../redux/actions/userLogOut'
 
 function index (props){
 
-    const auth = getAuth();
-    const db = getFirestore();
+    const auth = getAuth()
+    const db = getFirestore()
+    
     function logOut () {
-        signOut(auth).then(() => {
-          console.log('LogOut')
-        }).catch((error) => {
-          console.log(error)
-        })
+        props.userLogOut()
+        signOut(auth)
+            .catch((error) => {
+            console.log(error)
+            })
     }
 
     async function deleteDocument (docId) {
@@ -57,9 +59,9 @@ function index (props){
                 <View style={styles.card}>
                     <Text style={styles.title}>Favoris</Text>
                     {
+                        props.currentUserFavorites ?
                         props.currentUserFavorites.length > 0 ?
                         props.currentUserFavorites.map( (item, i) => {
-                            console.log(item)
                             return (
                                 <View key={i} style={{flex:1}}>
                                     <View style={{alignItems:'center', height:270, marginVertical:10}}>
@@ -74,6 +76,8 @@ function index (props){
                         })
                         :
                         <Text>Vos animes ajoutés en favoris apparaîtront ici</Text>
+                        :
+                        <Text>Vos animes ajoutés en favoris apparaîtront ici</Text>
                     }
                     <TouchableOpacity style={{marginVertical:15, padding:5, color:'tomato', fontWeight:'bold', backgroundColor:'deepskyblue', borderRadius:4}} onPress={() => {props.navigation.navigate('ExplorerTab')}}><Text style={{color:'white',textAlign:'center'}}>Ajouter</Text></TouchableOpacity>
                 </View>
@@ -86,7 +90,7 @@ const mapStateToProps = (store) => ({
     currentUserFavorites: store.userState.currentUserFavorites
 })
 
-const mapDispatchProps = (dispatch) => bindActionCreators({deleteFromFavorites}, dispatch)
+const mapDispatchProps = (dispatch) => bindActionCreators({deleteFromFavorites,userLogOut}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchProps)(index)
 

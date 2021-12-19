@@ -17,9 +17,8 @@ function Login(props) {
         setLoading(true)
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
-            .then( (result) => {
+            .then( () => {
                 props.fetchUser()
-                console.log('LoggedIn')
                 setLoading(false)
             })
             .catch( (error) => {

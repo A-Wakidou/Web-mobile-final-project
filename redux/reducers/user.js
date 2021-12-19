@@ -27,5 +27,11 @@ export const user = (state = initialState, action) => {
                 ...state,
                 currentUserFavorites: [...state.currentUserFavorites.slice(0, action.i), ...state.currentUserFavorites.slice(action.i +1)]
             }
+        case 'USER_LOG_OUT':
+            return {
+                ...state,
+                currentUser: null,
+                currentUserFavorites: []
+            }
     }
 }
