@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import 'react-native-gesture-handler';
+import React, {useState, useEffect, useRef} from 'react';
 import {StatusBar} from 'expo-status-bar'
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Dimensions,Animated } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Home,Details, Account,Explorer,ResetPassword, ExplorerDetails, Login, Register, SearchResults, SearchResultsByCategory } from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -73,6 +74,12 @@ export default function App(props) {
 
   const[loaded, setLoaded] = useState(false)
   const[loggedIn, setLoggedIn] = useState(false)  
+  const tabOffsetValue = useRef(new Animated.Value(0)).current
+
+  function getWidth() {
+    let width = Dimensions.get("window").width
+    return width /3
+  }
 
   useEffect(() => {
     const auth = getAuth();
@@ -100,10 +107,11 @@ export default function App(props) {
       <NavigationContainer>
         <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarStyle: {backgroundColor: '#21252b', color: 'white'},
+          tabBarStyle: {backgroundColor: '#21252b', color: 'white', height:80},
           tabBarActiveTintColor: 'tomato',
           tabBarInactiveTintColor: 'gray',
-          headerShown:false
+          headerShown:false,
+          tabBarShowLabel:false
         })}>
           <Tab.Screen
             name="HomeTab"
@@ -115,7 +123,14 @@ export default function App(props) {
               },
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="home" color={color} size={size} />
-          )}} />
+          )}} listeners={({navigation,route}) => ({
+            tabPress: e => {
+              Animated.spring(tabOffsetValue, {
+                toValue: 0,
+                useNativeDriver:false,
+              }).start()
+            }
+          })} />
           <Tab.Screen
             name="ExplorerTab"
             component={ExplorerStackScreens}
@@ -126,7 +141,14 @@ export default function App(props) {
               },
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="magnify" color={color} size={size} />
-          )}} />
+          )}} listeners={({navigation,route}) => ({
+            tabPress: e => {
+              Animated.spring(tabOffsetValue, {
+                toValue: getWidth(),
+                useNativeDriver:false,
+              }).start()
+            }
+          })} />
           <Tab.Screen 
             name="AccountTab"
             component={ loggedIn ? AccountStackScreensLoggedIn : AccountStackScreensNotLoggedIn}
@@ -137,8 +159,16 @@ export default function App(props) {
               },
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons name="account" color={color} size={size} />
-          )}} />
+          )}} listeners={({navigation,route}) => ({
+            tabPress: e => {
+              Animated.spring(tabOffsetValue, {
+                toValue: getWidth()*2,
+                useNativeDriver:false,
+              }).start()
+            }
+          })} />
         </Tab.Navigator>
+        <Animated.View style={{width:getWidth(), height:100, backgroundColor:'tomato', position:'absolute', bottom: 78, height: 2, borderRadius:'50%', transform: [ {translateX: tabOffsetValue}]}}></Animated.View>
         <StatusBar style="auto"/>
       </NavigationContainer>
     </Provider>
