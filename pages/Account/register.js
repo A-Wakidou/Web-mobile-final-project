@@ -1,8 +1,11 @@
 import React, {useState} from 'react'
-import { View,  Button, TextInput,ActivityIndicator, StyleSheet, Keyboard} from 'react-native'
+import { View,  Button,Text, TextInput,ActivityIndicator, StyleSheet, Keyboard} from 'react-native'
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
 import Card from '../../components/card'
+import {fetchUser} from '../../redux/actions'
+import { bindActionCreators} from 'redux'
+import {connect} from 'react-redux'
 
 function Register(props) {
 
@@ -23,6 +26,7 @@ function Register(props) {
                     displayName: displayName
                 })
                     .then( () => {
+                        props.fetchUser()
                         try {
                             addDoc(collection(db, "users"), {
                                 email:result.user.email,
@@ -61,7 +65,9 @@ function Register(props) {
     )
 }
 
-export default Register
+const mapDispatchProps = (dispatch) => bindActionCreators({fetchUser}, dispatch)
+
+export default connect(null, mapDispatchProps)(Register)
 
 const styles = StyleSheet.create({
     input: {
