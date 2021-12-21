@@ -48,7 +48,7 @@ export default function resetPassword(props) {
     return (
         <View style={styles.card}>
             <Text style={styles.text}>Entrez votre adresse email afin de réinitialiser votre mot de passe</Text>
-            <TextInput style={styles.input} placeholder="Votre email" onChangeText={(email) => setEmail(email)} />
+            <TextInput style={styles.input} placeholder="Votre email" onChangeText={(email) => setEmail(email.toLowerCase())} />
             {
                 errorMessage ? <Text style={{ marginVertical:5, textAlign:'center', color:'tomato'}}> {errorMessage} </Text> : null
             }
