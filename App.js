@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {StatusBar} from 'expo-status-bar'
 import { View, ActivityIndicator, Dimensions,Animated } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home,Details, Account,Explorer,ResetPassword, ExplorerDetails, Login, Register, SearchResults, SearchResultsByCategory } from "./pages"
+import { Home,Details, Account,Explorer,ResetPassword, ExplorerDetails, Login, Register, SearchResults, SearchResultsByCategory} from "./pages"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
