@@ -13,7 +13,7 @@ export default function Detail({route}) {
                 <View style={{flex:1, marginLeft:15, marginTop:20, paddingBottom:10}}>
                     <Text style={styles.viewText}><Text style={styles.span}>Fans : </Text>{item.members}</Text>
                     <Text style={styles.viewText}><Text style={styles.span}>Classment (Top sorties) : </Text>{item.rank}</Text>
-                    <Text style={styles.viewText}><Text style={styles.span}>Date de sortie : </Text>{item.start_date ? item.start_date : 'Dévoilée prochainement'}</Text>
+                    <Text style={styles.viewText}><Text style={styles.span}>Date de sortie : </Text>{item.start_date ? item.start_date.substring(0,10) : 'Dévoilée prochainement'}</Text>
                     <Text style={styles.viewText}><Text style={styles.span}>Nombre total d'épisodes prévus : </Text>{item.episodes}</Text>
                     <Text style={styles.viewText}><Text style={styles.span}>Type de sortie : </Text>{item.type}</Text>
                     <Button onPress={() => Linking.openURL(item.url)} title="Plus d'informations" />
