@@ -1,17 +1,21 @@
-import React from 'react'
-import { SafeAreaView,View,Text, Image,FlatList, TouchableOpacity} from 'react-native'
+import React, {useState} from 'react'
+import { SafeAreaView,View,Modal, Pressable, Text, Image,FlatList, TouchableOpacity, StyleSheet} from 'react-native'
 import { connect } from 'react-redux'
 import {addToFavorites} from '../../redux/actions/addFavorites'
 import { bindActionCreators} from 'redux'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
+import {getAuth} from 'firebase/auth'
 
 function searchResults(props) {
 
     const data = props.route.params.data
     const text = props.route.params.text
+    const auth = getAuth()
+    const db = getFirestore()
+
+    const [modalVisible, setModalVisible] = useState(false)
 
     function addItem(item) {
-      const db = getFirestore();
       addDoc(collection(db, "favorites"), {
           uid:props.currentUser.uid,
           mal_id:item.mal_id,
@@ -60,13 +64,39 @@ function searchResults(props) {
                         }
                         else {
                           return (
-                            <TouchableOpacity onPress={() => addItem(item)}>
+                            <TouchableOpacity onPress={() => {
+                              if(auth.currentUser) {
+                                addItem(item)
+                              }
+                              else {
+                                setModalVisible(true)
+                              }
+                            }}>
                               <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
                             </TouchableOpacity>
                           )
                         }
                       })()
                     }
+                    <View style={styles.centeredView}>
+                      <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                          Alert.alert('Modal has been closed.');
+                          setModalVisible(!modalVisible);
+                        }}>
+                        <View style={styles.centeredView}>
+                          <View style={styles.modalView}>
+                            <Text style={styles.modalText}>Identifiez-vous pour pouvoir ajouter des favoris.</Text>
+                            <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setModalVisible(!modalVisible)}>
+                              <Text style={styles.textStyle}>Masquer</Text>
+                            </Pressable>
+                          </View>
+                        </View>
+                      </Modal>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -90,3 +120,47 @@ const mapStateToProps = (store) => ({
 const mapDispatchProps = (dispatch) => bindActionCreators({addToFavorites}, dispatch)
 
 export default connect(mapStateToProps, mapDispatchProps)(searchResults)
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 4,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 4,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: 'tomato',
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize:12
+  },
+  modalText: {
+    marginBottom: 10,
+    textAlign: 'center',
+    fontWeight:'bold',
+    fontSize:12
+  }
+})

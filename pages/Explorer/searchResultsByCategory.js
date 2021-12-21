@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Alert, SafeAreaView, View,Text, Image,FlatList, TouchableOpacity,Modal, StyleSheet, Pressable} from 'react-native'
+import { SafeAreaView, View,Text, Image,FlatList, TouchableOpacity,Modal, StyleSheet, Pressable} from 'react-native'
 import { connect } from 'react-redux'
 import { getFirestore, collection, addDoc } from "firebase/firestore"
 import {addToFavorites} from '../../redux/actions/addFavorites'
@@ -12,7 +12,7 @@ function searchResultsByCategory(props) {
   const categoryId = props.route.params.category
   var category =''
   const [modalVisible, setModalVisible] = useState(false)
-  const auth = getAuth();
+  const auth = getAuth()
   console.log(props)
   if(categoryId == 27) {
       category = 'Shônens'
@@ -68,7 +68,6 @@ function searchResultsByCategory(props) {
           }
           else {
             setModalVisible(true)
-            console.log('a')
           }
         }}>
           <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>Ajouter aux favoris</Text>
@@ -101,7 +100,6 @@ function searchResultsByCategory(props) {
                       <TouchableOpacity onPress={() => props.navigation.navigate('ExplorerDetails', {item})}>
                         <Text style={{fontWeight:'bold', color:'rgb(33, 150, 243)', marginTop:5}}>En savoir plus</Text>
                       </TouchableOpacity>
-                      
                       {
                         isFavorite(item)
                       }
@@ -111,7 +109,6 @@ function searchResultsByCategory(props) {
                           transparent={true}
                           visible={modalVisible}
                           onRequestClose={() => {
-                            Alert.alert('Modal has been closed.');
                             setModalVisible(!modalVisible);
                           }}>
                           <View style={styles.centeredView}>
