@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, View, TextInput, StyleSheet, Text, Modal,Pressable} from 'react-native'
+import { Button, View, TextInput, StyleSheet, Text, Modal,Pressable,ActivityIndicator} from 'react-native'
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth'
 import {getDocs, getFirestore, collection} from 'firebase/firestore'
 import Card from '../../components/card'
@@ -9,26 +9,41 @@ export default function resetPassword(props) {
     const auth = getAuth()
     const [modalVisible, setModalVisible] = useState(false)
     const[email,setEmail]= useState()
-    const [errorMessage, setErrorMessage] = useState()
+    const [errorMessage, setErrorMessage] = useState(false)
+    const [isLoading, setLoading] = useState(false);
 
     async function onResetPassword() {
+        setLoading(true)
         const db = getFirestore()
+        var resetEmailSent = false
+        var recipientEmail = ""
         const querySnapshot = await getDocs(collection(db, "users"))
+
         querySnapshot.forEach((doc) => {
           if(doc.data().email == email) {
+            recipientEmail = doc.data().email
+          }
+        })
+
+        if(recipientEmail){
             sendPasswordResetEmail(auth, email)
                 .then( () => {
                     setModalVisible(true)
+                    resetEmailSent = true
+                    if(errorMessage){
+                        setErrorMessage(false)
+                    }
+                    setLoading(false)
                 })
                 .catch((error) => {
                     setErrorMessage(error.message)
                 })
-          }
-          else {
-              setErrorMessage('No adress finded')
-          }
-        })
+        }
 
+        if(resetEmailSent == false && !recipientEmail) {
+            setLoading(false)
+            setErrorMessage('No adress finded')
+        }
     }
     return (
         <View style={styles.card}>
@@ -37,6 +52,7 @@ export default function resetPassword(props) {
             {
                 errorMessage ? <Text style={{ marginVertical:5, textAlign:'center', color:'tomato'}}> {errorMessage} </Text> : null
             }
+            {isLoading ? <ActivityIndicator style={{marginVertical:10}}/> : null}
             <Button onPress={onResetPassword} title="Valider" />
             <View style={styles.centeredView}>
                 <Modal
@@ -47,16 +63,16 @@ export default function resetPassword(props) {
                     setModalVisible(!modalVisible);
                 }}>
                     <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Un email a été envoyé afin de réinitialiser votre mot de passe.</Text>
-                        <Pressable style={[styles.button, styles.buttonClose]} onPress={() => {
-                            setModalVisible(!modalVisible)
-                            props.navigation.navigate('Login')
-                            }
-                        }>
-                        <Text style={styles.textStyle}>Confirmer</Text>
-                        </Pressable>
-                    </View>
+                        <View style={styles.modalView}>
+                            <Text style={styles.modalText}>Un email a été envoyé afin de réinitialiser votre mot de passe.</Text>
+                            <Pressable style={[styles.button, styles.buttonClose]} onPress={() => {
+                                setModalVisible(!modalVisible)
+                                props.navigation.navigate('Login')
+                                }
+                            }>
+                            <Text style={styles.textStyle}>Retour</Text>
+                            </Pressable>
+                        </View>
                     </View>
                 </Modal>
             </View>

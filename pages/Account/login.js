@@ -36,9 +36,9 @@ function Login(props) {
                 <TextInput style={styles.input} placeholder="Votre mot de passe" secureTextEntry={true}  onChangeText={(password) => setPassword(password)} />
                 { errorFetch ?<Text style={{textAlign:'center', color:'red', marginVertical:5}}>Erreur: {errorFetch} </Text> : null }
             <Button onPress={onSignIn} title="Valider" />
-            <View style={{marginVertical:10}}>
-                <TouchableOpacity style={{marginVertical:2, color:'tomato', textAlign:'center', fontWeight:'bold', textDecorationLine:'underline'}} onPress={ () => props.navigation.navigate('Register')}><Text>Inscription</Text></TouchableOpacity>
-                <TouchableOpacity style={{marginVertical:2, color:'tomato', textAlign:'center', fontWeight:'bold', textDecorationLine:'underline'}} onPress={ () => props.navigation.navigate('ResetPassword')}><Text>Mot de passe oublié </Text></TouchableOpacity>
+            <View style={{ marginVertical:15}}>
+                <TouchableOpacity style={{ marginVertical:3}} onPress={ () => props.navigation.navigate('Register')}><Text style={{textAlign:'center', fontWeight:'bold', color:'tomato'}}>Inscription</Text></TouchableOpacity>
+                <TouchableOpacity style={{ marginVertical:3}} onPress={ () => props.navigation.navigate('ResetPassword')}><Text style={{ textAlign:'center', fontWeight:'bold', color:'tomato'}}>Mot de passe oublié </Text></TouchableOpacity>
             </View>
             {
                 loading ? <ActivityIndicator style={{marginVertical:20}} /> : null

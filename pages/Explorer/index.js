@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react"
-import { ScrollView,StatusBar, SafeAreaView, View,Text,TextInput, StyleSheet, Button, FlatList,Image, TouchableOpacity, Keyboard, ActivityIndicator} from "react-native"
+import React, {useState} from "react"
+import {StatusBar, SafeAreaView, View,Text,TextInput, StyleSheet, Button, FlatList, TouchableOpacity, Keyboard, ActivityIndicator} from "react-native"
 
 const Explorer = ({navigation}) => {
   const [isLoading, setLoading] = useState(false);
