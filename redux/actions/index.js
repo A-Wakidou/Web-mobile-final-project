@@ -7,6 +7,7 @@ export function fetchUser() {
     const auth = getAuth();
     const db = getFirestore()
     async function getUser() {
+      console.log('aa')
         const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach((doc) => {
           if(doc.data().uid == auth.currentUser.uid) {
