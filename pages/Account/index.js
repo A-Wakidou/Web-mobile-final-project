@@ -67,7 +67,7 @@ function index (props){
                                     <View style={{alignItems:'center', height:270, marginVertical:10}}>
                                         <Image style={{width:'50%', height:150}} source={{uri:item.image_url}}/>
                                         <Text style={{textAlign:'center', marginVertical:10, fontStyle:'italic', fontWeight:'bold'}}>{item.title}</Text>
-                                        <TouchableOpacity style={{width:'50%',marginVertical:5, padding:5, fontWeight:'bold', backgroundColor:'#373F51', borderRadius:4}} onPress={() => deleteFavorite(item)}><Text style={{textAlign:'center', color:'white'}}>Activer les notifications</Text></TouchableOpacity>
+                                        <TouchableOpacity style={{width:'50%',marginVertical:5, padding:5, fontWeight:'bold', backgroundColor:'#373F51', borderRadius:4}}><Text style={{textAlign:'center', color:'white'}}>Activer les notifications</Text></TouchableOpacity>
                                         <TouchableOpacity style={{width:'50%',marginVertical:5, padding:5, fontWeight:'bold', backgroundColor:'#ff2919', borderRadius:4}} onPress={() => deleteFavorite(item, i)}><Text style={{textAlign:'center', color:'white'}}>Retirer</Text></TouchableOpacity>
                                     </View>
                                     <View style={{flex:1, borderBottomColor: '#E7E7E7', marginTop:10, marginBottom:20, borderBottomWidth:1, width:'80%'}}/>
